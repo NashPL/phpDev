@@ -2,7 +2,7 @@
 
 namespace Lib;
 
-class PDO {
+class MySqli {
 
     private $servername;
     private $username;
@@ -15,9 +15,9 @@ class PDO {
         $this->servername = $dbConfig->MySQL->servername;
         $this->username = $dbConfig->MySQL->username;
         $this->password = $dbConfig->MySQL->password;
+        $this->dbName = $dbConfig->MySQL->dbName;
 
-        $this->mysql = mysqli_connect($this->servername, $this->username, $this->password);
-        $this->mysql->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->mysql = mysqli_connect($this->servername, $this->username, $this->password, $this->dbName);
 
         if (!$this->mysql) {
             throw new \Exception('Unable to Connect');
@@ -25,17 +25,32 @@ class PDO {
 
     }
 
+    public function closeConnection()
+    {
+        $this->mysql->close();
+    }
+
     public function select($query)
     {
         try {
             $result = $this->mysql->query($query);
-            if (isset($result) && $result->num_rows > 0) {
-                return $result;    
-            } else {
-                return false;
+            $data = array();
+            $result->data_seek(0);
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
             }
+            return $data;
         } catch (Exception $e) {
             throw new \Exception('Could not Run the Query: ' . $e->getMessage());
+        }
+    }
+
+    public function insert($query)
+    {
+        if ($this->mysql->query($query) === TRUE) {
+            return true;
+        } else {
+            throw new \Exception('Error inserting: \n ' . $this->mysql->error);
         }
     }
 }

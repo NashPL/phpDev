@@ -1,5 +1,6 @@
 {
     "MySQL": {
+        "dbName": "phpDev",
         "servername": "localhost",
         "username": "worker",
         "password": "worker123"
