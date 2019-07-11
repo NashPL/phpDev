@@ -1,0 +1,7 @@
+{
+    "MySQL": {
+        "servername": "localhost",
+        "username": "worker",
+        "password": "worker123"
+    }
+}
