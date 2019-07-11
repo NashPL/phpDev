@@ -5,5 +5,5 @@ use Http\Index;
 $index = new Index($_POST);
 $result = $index->processUser();
 if (isset($result)) {
-    header("Location: \quote.html?email=" . $result);
+    header("Location: \quote.php?email=" . $result);
 }
