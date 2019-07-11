@@ -2,7 +2,7 @@
 
 namespace Lib;
 
-class MySqli {
+class MysqlConnector {
 
     private $servername;
     private $username;
@@ -16,13 +16,10 @@ class MySqli {
         $this->username = $dbConfig->MySQL->username;
         $this->password = $dbConfig->MySQL->password;
         $this->dbName = $dbConfig->MySQL->dbName;
-
-        $this->mysql = mysqli_connect($this->servername, $this->username, $this->password, $this->dbName);
-
+        $this->mysql = new \mysqli($this->servername, $this->username, $this->password, $this->dbName);
         if (!$this->mysql) {
             throw new \Exception('Unable to Connect');
         }
-
     }
 
     public function closeConnection()
@@ -30,27 +27,37 @@ class MySqli {
         $this->mysql->close();
     }
 
-    public function select($query)
+    public function select($statement)
     {
         try {
-            $result = $this->mysql->query($query);
-            $data = array();
-            $result->data_seek(0);
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
+            $statement->execute();
+            $result = $statement->get_result();
+            $statement->close();
+        
+            if ($result->num_rows <= 0) {
+                return false;
+            } else {
+               $data = array();
+               while ($row = $result->fetch_assoc()) {
+                    $data[] = $row;
+                }
+                return $data;
             }
-            return $data;
         } catch (Exception $e) {
             throw new \Exception('Could not Run the Query: ' . $e->getMessage());
         }
     }
 
-    public function insert($query)
+    public function insert($statement)
     {
-        if ($this->mysql->query($query) === TRUE) {
-            return true;
-        } else {
-            throw new \Exception('Error inserting: \n ' . $this->mysql->error);
-        }
+        $result = $statement->execute();
+        $statement->close();
+        return $result;
     }
+
+    public function getMySQLObject()
+    {
+        return $this->mysql;
+    }
+
 }
