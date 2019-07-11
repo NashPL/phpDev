@@ -24,7 +24,5 @@ final class MySqliTest extends TestCase
         $result = $mySqli->select($query);
         $mySqli->closeConnection();
         $this->assertEquals($expected, $result[0]);
-
     }
-
 }
