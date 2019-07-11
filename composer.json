@@ -1,0 +1,13 @@
+{
+    "name": "kbuczynski/php-dev",
+    "authors": [
+        {
+            "name": "NashPL",
+            "email": "nash25pl@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    }
+}
