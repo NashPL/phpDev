@@ -12,6 +12,10 @@ use Lib\Service;
 use Lib\Goods;
 use Lib\User;
 
+/**
+ * 
+ * Class to Parse Post data for the Quote. 
+ */
 class QuoteParser
 {
     private $subscription;
@@ -20,10 +24,17 @@ class QuoteParser
     private $email;
     private $subtotal = 0;
 
+    /**
+     * Constructor of the class. Looks for 4 variables which will be used to construct qoute for the user
+     * @param Array Subscription Data
+     * @param Array Service Data
+     * @param Array Goods Data
+     * @param String User Email
+     */
     public function __construct($subscription, $services, $goods, $email)
     {
         if (empty($email) || !isset($email) || $email == '') {
-            throw new \Exception('No User to bind the Quote to.');
+            throw new \Exception('No User to bind the Quote to.'); //Throws exception as Email is 100% must have. 
         }
 
         $this->subscription = $subscription;
@@ -32,6 +43,12 @@ class QuoteParser
         $this->user = new User($email);
     }
 
+    /**
+     * Function to save quote in database for future fetching. It builds the quote for the user by
+     * executing private function which will overwrite class variables with new data.
+     * 
+     * @return Array Quote Results. 
+     */
     public function saveQuote()
     {
         $this->calculateSubscription();
@@ -50,6 +67,12 @@ class QuoteParser
 
     }
 
+    /**
+     * Private function to generate Quote Unique Reference ID. It save the data into database for future reference. 
+     * Simple Hash of parsed array into JSON should be unique enough. 
+     * @param Array Quote Data.
+     * @return String Generated UUID
+     */
     private function generateQuoteUUID($data)
     {
         $mysql = new MysqlConnector();
@@ -63,6 +86,10 @@ class QuoteParser
         return (md5(json_encode($data)));
     }
 
+    /**
+     * Private function to calculate Goods total and overwrite class variables with new information. 
+     * @return void
+     */
     private function calculateGoods()
     {
         $goods = new Goods();
@@ -78,6 +105,10 @@ class QuoteParser
         $this->goods = $goodList;
     }
 
+    /**
+     * Private function to calculate Service total and overwrite class variables with new information. 
+     * @return void
+     */
     private function calculateService()
     {
         $service = new Service();
@@ -94,6 +125,10 @@ class QuoteParser
 
     }
 
+    /**
+     * Private function to calculate Subscription total and overwrite class variables with new information. 
+     * @return void
+     */
     private function calculateSubscription()
     {
         $subscription = new Subscription();

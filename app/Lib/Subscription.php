@@ -5,9 +5,16 @@ namespace Lib;
 include_once(dirname(__DIR__) . '/Lib/MysqlConnector.php');
 use Lib\MysqlConnector;
 
+/**
+ * A class to handle fetching from MySQL and calculating data needed for further processing. 
+ */
 class Subscription 
 {
 
+    /**
+     * Function to get all subscriptions from the Database
+     * @return Array List of Subscriptions
+     */
     public function getListOfSubscription()
     {
         $mysql = new MysqlConnector();
@@ -19,6 +26,11 @@ class Subscription
         return $result;
     }
 
+    /**
+     * Gets single subscription by given ID
+     * @param Int Id of a subscription.
+     * @return Array result from database.
+     */
     public function getById($id) {
         $mysql = new MysqlConnector();
         $mysqlObject = $mysql->getMySQLObject();
@@ -30,6 +42,11 @@ class Subscription
         return $result;
     }
 
+    /**
+     * Calculates the amount of days not including weekends from provided string. 
+     * @param String A date range format separated by ' - ' .
+     * @return Int Number of days. 
+     */
     public function calculateAmountOfDays($date)
     {
         $date0 = new \DateTime(explode(' - ', $date)[0]);

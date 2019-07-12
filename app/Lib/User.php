@@ -5,6 +5,9 @@ namespace Lib;
 include_once(dirname(__DIR__) . '/Lib/MysqlConnector.php');
 use Lib\MysqlConnector;
 
+/**
+ * User class to build an object for future referencing the user. 
+ */
 class User
 {
     private $id;
@@ -14,6 +17,11 @@ class User
     private $phoneNumber;
     private $existingUser;
 
+    /**
+     * Constructor. Takes email address which then searches for any users that have the same address. 
+     * It flags if email is new so we can create new user if needed. 
+     * @param String email address
+     */
     public function __construct($email)
     {
         $mysql = new MysqlConnector();
@@ -37,6 +45,10 @@ class User
 
     }
 
+    /**
+     * Function to process the user threw the system. If user is new we simply create new entry in the database. 
+     * @return String user Email. 
+     */
     public function processUser()
     {
         if ($this->existingUser === FALSE) {
