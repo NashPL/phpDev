@@ -6,6 +6,8 @@ use Lib\QuoteParser;
 $subscription = $_POST['subscription'];
 $goods = $_POST['goods'];
 $services = array();
+
+/* Parsing the POST variable to get much more readable output to parse */
 foreach ($_POST['service']['name'] as $key0 => $value0) {
     $services[$key0] = array();
     $services[$key0]['name'] = $value0;
@@ -16,8 +18,8 @@ foreach ($_POST['service']['name'] as $key0 => $value0) {
     }
 }
 
+/* Checking if the start time is not lower or the same as end time if options is selected */
 foreach ($services as $key0 => $value0) {
-
     if ($_POST['service']['date']['time']['from'][$key0] >= $_POST['service']['date']['time']['till'][$key0] && $_POST['service']['name'][0] != 0){
         echo("<h1>Your start time can not be same or lower than your end time.</h1>");
         echo('<a href="/quote.php?email='.$_POST['email'].'">Go Back</a>');
