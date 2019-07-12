@@ -7,6 +7,7 @@ use Lib\MysqlConnector;
 
 class User
 {
+    private $id;
     private $name;
     private $password;
     private $email;
@@ -24,6 +25,7 @@ class User
         $mysql->closeConnection();
 
         if (isset($result)) {
+            $this->id = $result['id'];
             $this->name = $result['name'];
             $this->password = $result['password'];
             $this->email = $result['email_address'];
@@ -38,7 +40,6 @@ class User
     public function processUser()
     {
         if ($this->existingUser === FALSE) {
-    
             $mysql = new MysqlConnector();
             $mysqlObject = $mysql->getMySQLObject();
             $query = "INSERT INTO phpDev_user SET name=?, password=?, email_address=?, phone_number=?"; 
@@ -48,6 +49,21 @@ class User
             $mysql->closeConnection();
         } 
         return $this->email;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     public function setName($name)
